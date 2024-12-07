@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Net Worth Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        .button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Net Worth Calculator</h1>
+    <h2 id="net-worth">Loading...</h2>
+    <button class="button" onclick="updateNetWorth(1)">+1%</button>
+    <button class="button" onclick="updateNetWorth(2)">+2%</button>
+    <button class="button" onclick="updateNetWorth(5)">+5%</button>
+    <button class="button" onclick="updateNetWorth(10)">+10%</button>
+
+    <script>
+        // Load the saved net worth from localStorage or initialize it to 100
+        let netWorth = localStorage.getItem('netWorth') ? parseFloat(localStorage.getItem('netWorth')) : 100;
+
+        // Display the current net worth on page load
+        document.getElementById("net-worth").innerText = netWorth.toFixed(2);
+
+        // Function to update the net worth
+        function updateNetWorth(percentage) {
+            netWorth += (netWorth * (percentage / 100));
+            document.getElementById("net-worth").innerText = netWorth.toFixed(2);
+
+            // Save the updated net worth to localStorage
+            localStorage.setItem('netWorth', netWorth);
+        }
+    </script>
+</body>
+</html>
