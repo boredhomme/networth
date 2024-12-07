@@ -57,8 +57,9 @@
         function cancelLastChange() {
             // Only revert if there's a previous value in the history
             if (history.length > 1) {
-                history.pop(); // Remove the last change
-                netWorth = history[history.length - 1]; // Revert to the previous value
+                // Revert to the last value by popping the most recent entry
+                history.pop();
+                netWorth = history[history.length - 1]; // Get the new last value
                 document.getElementById("net-worth").innerText = netWorth.toFixed(2);
 
                 // Save the updated history to localStorage
