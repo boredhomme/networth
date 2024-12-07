@@ -32,38 +32,39 @@
         const initialNetWorth = 1000;
 
         // Load the saved history or initialize it
-        let history = JSON.parse(localStorage.getItem('history')) || [initialNetWorth];
+        let history = JSON.parse(localStorage.getItem('history')) || [];
 
-        // Set the current net worth to the last value in history
-        let netWorth = history[history.length - 1];
+        // Set the current net worth
+        let netWorth = parseFloat(localStorage.getItem('netWorth')) || initialNetWorth;
 
         // Display the current net worth on page load
         document.getElementById("net-worth").innerText = netWorth.toFixed(2);
 
         // Function to update the net worth
         function updateNetWorth(percentage) {
-            // Add the current value to the history before updating
+            // Push current net worth to history before updating
             history.push(netWorth);
 
             // Update the net worth
             netWorth += (netWorth * (percentage / 100));
             document.getElementById("net-worth").innerText = netWorth.toFixed(2);
 
-            // Save the updated history to localStorage
+            // Save the updated history and net worth to localStorage
             localStorage.setItem('history', JSON.stringify(history));
+            localStorage.setItem('netWorth', netWorth.toFixed(2));
         }
 
         // Function to cancel the last change
         function cancelLastChange() {
-            // Only revert if there's a previous value in the history
-            if (history.length > 1) {
-                // Revert to the last value by popping the most recent entry
-                history.pop();
-                netWorth = history[history.length - 1]; // Get the new last value
+            // Only revert if history has at least one previous value
+            if (history.length > 0) {
+                // Pop the last net worth from history
+                netWorth = history.pop();
                 document.getElementById("net-worth").innerText = netWorth.toFixed(2);
 
-                // Save the updated history to localStorage
+                // Save the updated history and net worth to localStorage
                 localStorage.setItem('history', JSON.stringify(history));
+                localStorage.setItem('netWorth', netWorth.toFixed(2));
             } else {
                 alert("Cannot undo further. You're already at the initial value.");
             }
