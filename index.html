@@ -25,21 +25,47 @@
     <button class="button" onclick="updateNetWorth(2)">+2%</button>
     <button class="button" onclick="updateNetWorth(5)">+5%</button>
     <button class="button" onclick="updateNetWorth(10)">+10%</button>
+    <button class="button" onclick="cancelLastChange()">Cancel Last Change</button>
 
     <script>
-        // Load the saved net worth from localStorage or initialize it to 100
-        let netWorth = localStorage.getItem('netWorth') ? parseFloat(localStorage.getItem('netWorth')) : 100;
+        // Initial net worth value
+        const initialNetWorth = 1000;
+
+        // Load the saved history or initialize it
+        let history = JSON.parse(localStorage.getItem('history')) || [initialNetWorth];
+
+        // Set the current net worth to the last value in history
+        let netWorth = history[history.length - 1];
 
         // Display the current net worth on page load
         document.getElementById("net-worth").innerText = netWorth.toFixed(2);
 
         // Function to update the net worth
         function updateNetWorth(percentage) {
+            // Add the current value to the history before updating
+            history.push(netWorth);
+
+            // Update the net worth
             netWorth += (netWorth * (percentage / 100));
             document.getElementById("net-worth").innerText = netWorth.toFixed(2);
 
-            // Save the updated net worth to localStorage
-            localStorage.setItem('netWorth', netWorth);
+            // Save the updated history to localStorage
+            localStorage.setItem('history', JSON.stringify(history));
+        }
+
+        // Function to cancel the last change
+        function cancelLastChange() {
+            // Only revert if there's a previous value in the history
+            if (history.length > 1) {
+                history.pop(); // Remove the last change
+                netWorth = history[history.length - 1]; // Revert to the previous value
+                document.getElementById("net-worth").innerText = netWorth.toFixed(2);
+
+                // Save the updated history to localStorage
+                localStorage.setItem('history', JSON.stringify(history));
+            } else {
+                alert("Cannot undo further. You're already at the initial value.");
+            }
         }
     </script>
 </body>
